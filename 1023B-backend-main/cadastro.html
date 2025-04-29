@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cadastro estudante </title>
+</head>
+<body>
+    <form onsubmit="event.preventDefault();trataForma()">
+        <input type="text" id="id" name="id" placeholder="id">
+        <input type="text" name="nome" id="nome" placeholder="nome">
+        <input type="submit" value="enviar">
+    </form>
+    <script>
+       async function trataForma(){
+            const idInput = document.getElementById("id")
+            const idNome = document.getElementById("nome")
+            const id = idInput.value
+            const nome = idNome.value
+
+            const objEstudante = {
+                id,
+                nome
+            }
+            try{
+                const resposta = await fetch("http://localhost:8001/estudantes",{
+            headers:{
+                'content-type': 'application/json'
+            },
+            method:"post",
+            body: JSON.stringify(objEstudante)
+        })
+        if(resposta.status===404){
+            alert("estudando dont gona exlcloid")
+        }
+        if(resposta.status===400){
+            const dados = await resposta.json()
+            alert("servedir conection wromg\n"+dados.mensagem)
+        }
+        if(resposta.status===200){
+            alert("estadne insered sucefily")
+        }  
+              }catch(erro){
+                console.log(erro)
+                alert("deu errado na requisição do post \n"+"voçe ligou o back end com npm run dev?")
+            }
+        
+        }
+    </script>
+</body>
+</html>
