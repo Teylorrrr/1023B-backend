@@ -3,7 +3,10 @@ import fastify, { FastifyReply, FastifyRequest } from 'fastify'
 import cors from '@fastify/cors'
 
 const app = fastify()
-app.register(cors)
+app.register(cors,{
+    origin:"*",
+    methods:["GET", "POST", "PUT", "DELETE"],
+})
 
 app.get("/", (request: FastifyRequest, reply: FastifyReply) => {
     reply.send("Fastify Funcionando!")
@@ -37,20 +40,39 @@ app.get("/atletas", async (request: FastifyRequest, reply: FastifyReply) => {
         }
     }
 })
-app.post("/atletas", async (request: FastifyRequest, reply: FastifyReply) => {
-    const {id,nome} = request.body as any
-    ///verificar se é vazio
-    //zod
-    
+
+app.delete("/atletas/:id", async (request: FastifyRequest, reply: FastifyReply) => {
+    const { id } = request.params as any;  // Usando request.params para pegar o id
     try {
         const conn = await mysql.createConnection({
             host: "localhost",
             user: 'root',
             password: "",
-            database: 'banco1023b',
+            database: 'peneiras',
             port: 3306
         });
-        const resultado = await conn.query("INSERT INTO atletas (id,nome) VALUES (?,?)", [id,nome])
+        const [resultado] = await conn.query("DELETE FROM atletas WHERE id = ?", [id]);
+    } catch (erro) {
+        console.error(erro);
+        reply.status(500).send({ mensagem: "Erro ao deletar atleta" });
+    }
+});
+  
+
+app.post("/atletas", async (request: FastifyRequest, reply: FastifyReply) => {
+    const { id, nome, idade, posicao, altura, forca, impulsao, velocidade, resistencia, arremesso } = request.body as any
+    try {
+        const conn = await mysql.createConnection({
+            host: "localhost",
+            user: 'root',
+            password: "",
+            database: 'peneiras',
+            port: 3306
+        });
+        const resultado = await conn.query(
+            "INSERT INTO atletas (id, nome, idade, posicao, altura, forca, impulsao, velocidade, resistencia, arremesso) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [id, nome, idade, posicao, altura, forca, impulsao, velocidade, resistencia, arremesso]
+          )
         const [dados,estruturaTabela] = resultado
         reply.status(200).send(dados)
         

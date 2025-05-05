@@ -147,4 +147,45 @@ footer{
 
     #candidatos li:hover {
         background-color: #e0f0ff;
-    }
+    }  
+
+
+
+    /*lista e delete*/
+   /* CSS aqui para garantir visualização correta */
+   #candidatos {
+    list-style: none;
+    padding: 0;
+  }
+
+  .item-atleta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+  }
+
+  .btn-excluir {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    height: fit-content;
+  }
+
+  .btn-excluir:hover {
+    background-color: #c0392b;
+  }
+
+  .info-atleta {
+    flex: 1;
+    padding-right: 10px;
+  }
+
+    /*lista e delete*/

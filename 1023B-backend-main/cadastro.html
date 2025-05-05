@@ -31,6 +31,9 @@
         <input type="number" name="idade" id="idade" placeholder="Ex: 18"min="5" max="80" required
          oninvalid="this.setCustomValidity('Informe uma idade válida (entre 5 e 80)')"
         oninput="this.setCustomValidity('')">
+        <label>Posição</label>
+        <input type="text" name="posicao" id="posicao" placeholder="Ex: Pivô" required oninvalid="this.setCustomValidity('Por favor, preencha a posição')"
+        oninput="this.setCustomValidity('')">
         <label>Altura</label>
         <input type="number" name="altura" id="altura" placeholder="Ex: 1.80"min="1" max="2.5" step="0.01" required
          oninvalid="this.setCustomValidity('Informe uma altura válida (mínimo 0.60m e máximo 2.50m)')"
@@ -60,62 +63,54 @@
     </form>
 </div>  
     <script>
-       async function trataForma(){
-            const idInput = document.getElementById("id")
-            const idNome = document.getElementById("nome")
-            const idIdade = document.getElementById("idade")
-            const idAltura = document.getElementById("altura")
-            const idForca = document.getElementById("forca")
-            const idImpulsao = document.getElementById("impulsao")
-            const idVelocidade = document.getElementById("velocidade")
-            const idResistencia = document.getElementById("resistencia")
-            const idArremesso = document.getElementById("arremesso")
-            
-            const id = idInput.value
-            const nome = idNome.value
-            const idade = idIdade.value
-            const altura = idAltura.value
-            const forca = idForca.value
-            const impulsao = idImpulsao.value
-            const velocidade = idVelocidade.value
-            const resistencia = idResistencia.value
-            const arremesso = idArremesso.value
+      
+    async function trataForma() {
+        const id = document.getElementById("id").value;
+        const nome = document.getElementById("nome").value;
+        const idade = document.getElementById("idade").value;
+        const posicao = document.getElementById("posicao").value;
+        const altura = document.getElementById("altura").value;
+        const forca = document.getElementById("forca").value;
+        const impulsao = document.getElementById("implusao").value;
+        const velocidade = document.getElementById("velocidade").value;
+        const resistencia = document.getElementById("resistencia").value;
+        const arremesso = document.getElementById("arremesso").value;
 
-            const objaltetas = {
+        const objAtleta = {
             id,
             nome,
             idade,
+            posicao,
             altura,
             forca,
-            implusao,
+            impulsao,
             velocidade,
             resistencia,
             arremesso
+        };
+
+        try {
+            const resposta = await fetch("http://localhost:8001/atletas", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(objAtleta)
+            });
+
+            if (resposta.status === 200 || resposta.status === 201) {
+                alert("Atleta cadastrado com sucesso!");
+            } else if (resposta.status === 400) {
+                const dados = await resposta.json();
+                alert("Erro no cadastro:\n" + dados.mensagem);
+            } else {
+                alert("Erro desconhecido ao cadastrar atleta.");
             }
-            try{
-                const resposta = await fetch("http://localhost:8001/atletas",{
-            headers:{
-                'content-type': 'application/json'
-            },
-            method:"post",
-            body: JSON.stringify(objatletas)
-        })
-        if(resposta.status===404){
-            alert("estudando dont gona exlcloid")
+        } catch (erro) {
+            console.error(erro);
+            alert("Erro na requisição POST. O backend está rodando com `npm run dev`?");
         }
-        if(resposta.status===400){
-            const dados = await resposta.json()
-            alert("servedir conection wromg\n"+dados.mensagem)
-        }
-        if(resposta.status===200){
-            alert("estadne insered sucefily")
-        }  
-              }catch(erro){
-                console.log(erro)
-                alert("deu errado na requisição do post \n"+"voçe ligou o back end com npm run dev?")
-            }
-        
-        }
+    }
     </script>
          <footer>       
             <div id="footer_copyright">

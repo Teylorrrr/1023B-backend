@@ -1,68 +1,85 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="style.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Listagem de atletas</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" />
+  <title>Listagem de atletas</title>
 </head>
-
 <body>
-    <header>
-        <i class="fa-regular fa-face-smile" style="color: #dedede;"></i>
-        <h1>CADASTRE SEU ATLETA</h1>
-        <nav>
-          <a href="index.html">MENU</a>
-          <a href="cadastro.html">CADASTRE</a>
-          <a href="listar.html">LISTA</a>
-        </nav>
-      </header>
+  <header>
+    <i class="fa-regular fa-face-smile" style="color: #dedede;"></i>
+    <h1>CADASTRE SEU ATLETA</h1>
+    <nav>
+      <a href="index.html">MENU</a>
+      <a href="cadastro.html">CADASTRE</a>
+      <a href="listar.html">LISTA</a>
+    </nav>
+  </header>
 
-    <ul id="candidatos"></ul>
-    <script>
-        async function buscaDados() {
-            const resposta = await fetch("http://localhost:8001/atletas");
-            if (resposta.status === 200) {
-                const dados = await resposta.json();
-                const ul = document.getElementById("candidatos");
-    
-                for (let i = 0; i < dados.length; i++) {
-                    const obj = dados[i];
-    
-                    const li = document.createElement("li");
-                    li.innerHTML = `
-                        <strong>ID:</strong> ${obj.id}<br>
-                        <strong>Nome:</strong> ${obj.nome}<br>
-                        <strong>Idade:</strong> ${obj.idade} anos<br>
-                        <strong>Altura:</strong> ${obj.altura} m<br>
-                        <strong>Força:</strong> ${obj.forca}<br>
-                        <strong>Impulsão:</strong> ${obj.impulsao}<br>
-                        <strong>Velocidade:</strong> ${obj.velocidade}<br>
-                        <strong>Resistência:</strong> ${obj.resistencia}<br>
-                        <strong>Arremesso:</strong> ${obj.arremesso}
-                    `;
-    
-                    ul.appendChild(li);
-                }
-            } else {
-                if (resposta.status === 400) {
-                    const dados = await resposta.json();
-                    alert(dados.mensagem);
-                } else {
-                    alert("Erro Desconhecido!");
-                }
+  <ul id="candidatos"></ul>
+
+  <script>
+    async function buscaDados() {
+      const resposta = await fetch("http://localhost:8001/atletas");
+      if (resposta.status === 200) {
+        const dados = await resposta.json();
+        const ul = document.getElementById("candidatos");
+        ul.innerHTML = "";
+
+        dados.forEach((obj) => {
+          const li = document.createElement("li");
+          li.className = "item-atleta";
+
+          const info = document.createElement("div");
+          info.className = "info-atleta";
+          info.innerHTML = `
+            <strong>ID:</strong> ${obj.id}<br>
+            <strong>Nome:</strong> ${obj.nome}<br>
+            <strong>Idade:</strong> ${obj.idade}<br>
+            <strong>Altura:</strong> ${obj.altura}<br>
+            <strong>Força:</strong> ${obj.forca}<br>
+            <strong>Impulsão:</strong> ${obj.impulsao}<br>
+            <strong>Velocidade:</strong> ${obj.velocidade}<br>
+            <strong>Resistência:</strong> ${obj.resistencia}<br>
+            <strong>Arremesso:</strong> ${obj.arremesso}
+          `;
+
+          const botaoDeletar = document.createElement("button");
+          botaoDeletar.innerText = "Excluir";
+          botaoDeletar.className = "btn-excluir";
+          botaoDeletar.onclick = async () => {
+            const confirmacao = confirm("Tem certeza que deseja excluir?");
+            if (confirmacao) {
+              const respostaDel = await fetch(`http://localhost:8001/atletas/${obj.id}`, {
+                method: "DELETE"
+              });
+              if (respostaDel.ok) {
+                alert("Atleta deletado com sucesso.");
+                buscaDados();
+              } else {
+                alert("Erro ao excluir atleta.");
+              }
             }
-        }
-    
-        buscaDados();
-    </script>
-    
+          };
 
-        <footer>       
-        <div id="footer_copyright">
-            &#169 2023 Desenvolvimento por Teylor 1023B
-        </div>
-        </footer>
+          li.appendChild(info);
+          li.appendChild(botaoDeletar);
+          ul.appendChild(li);
+        });
+      } else {
+        alert("Erro ao buscar atletas.");
+      }
+    }
+
+    buscaDados();
+  </script>
+
+  <footer>
+    <div id="footer_copyright">
+      &#169 2023 Desenvolvimento por Teylor 1023B
+    </div>
+  </footer>
 </body>
 </html>
