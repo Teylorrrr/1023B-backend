@@ -9,26 +9,55 @@
     <form onsubmit="event.preventDefault();trataForma()">
         <input type="text" id="id" name="id" placeholder="id">
         <input type="text" name="nome" id="nome" placeholder="nome">
+        <input type="text" name="idade" id="idade" placeholder="idade">
+        <input type="text" name="altura" id="altura" placeholder="altura">
+        <input type="text" name="forca" id="forca" placeholder="forca">
+        <input type="text" name="implusao" id="implusao" placeholder="implusao">
+        <input type="text" name="velocidade" id="velocidade" placeholder="velocidade">
+        <input type="text" name="resistencia" id="resistencia" placeholder="resistencia">
+        <input type="text" name="arremesso" id="arremesso" placeholder="arremesso">
         <input type="submit" value="enviar">
     </form>
     <script>
        async function trataForma(){
             const idInput = document.getElementById("id")
             const idNome = document.getElementById("nome")
+            const ididade = document.getElementById("idade")
+            const idaltura = document.getElementById("altura")
+            const idforca = document.getElementById("forca")
+            const idimpulsao = document.getElementById("impulsao")
+            const idvelocidade = document.getElementById("velocidade")
+            const idresistencia = document.getElementById("resistencia")
+            const idarremesso = document.getElementById("arremesso")
+            
             const id = idInput.value
             const nome = idNome.value
+            const nome = idNome.value
+            const nome = idNome.value
+            const nome = idNome.value
+            const nome = idNome.value
+            const nome = idNome.value
+            const nome = idNome.value
+            const nome = idNome.value
 
-            const objEstudante = {
-                id,
-                nome
+            const objaltetas = {
+            id,
+            nome,
+            idade,
+            altura,
+            forca,
+            implusao,
+            velocidade,
+            resistencia,
+            arremesso
             }
             try{
-                const resposta = await fetch("http://localhost:8001/estudantes",{
+                const resposta = await fetch("http://localhost:8001/atletas",{
             headers:{
                 'content-type': 'application/json'
             },
             method:"post",
-            body: JSON.stringify(objEstudante)
+            body: JSON.stringify(objatletas)
         })
         if(resposta.status===404){
             alert("estudando dont gona exlcloid")

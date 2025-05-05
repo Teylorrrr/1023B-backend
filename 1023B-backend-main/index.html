@@ -19,28 +19,20 @@
         </nav>
       </header>
 
-    <ul id="minhalista">
-    </ul>
+    <ul id="candidatos"></ul>
 
     <script>
         async function buscaDados(){
-            const resposta = await fetch("http://localhost:8001/estudantes")
-            //console.log(resposta)
+            const resposta = await fetch("http://localhost:8001/atletas")
             if(resposta.status === 200){
                 const dados = await resposta.json()
-                //console.log(dados)
-                const ul = document.getElementById("minhalista")
+                const ul = document.getElementById("candidatos")
                 for (let i = 0; i < dados.length; i++) {
                     const obj = dados[i];
-                    //console.log(obj.nome)
                     const li = document.createElement("li")
                     li.innerText = `${obj.id} ${obj.nome}`
                     ul.appendChild(li)
                 }
-                // vai passar por cada elemento dos dados
-                // vai criar um li pra cada dado
-                // adicionar o li na lista com id "minhalista"
-
             }else{
                 if(resposta.status === 400){
                     const dados = await resposta.json()
