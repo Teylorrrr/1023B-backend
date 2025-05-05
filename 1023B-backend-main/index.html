@@ -15,35 +15,9 @@
         <nav>
           <a href="index.html">MENU</a>
           <a href="cadastro.html">CADASTRE</a>
-          <a href="info.html">INFORMAÇÂO</a>
+          <a href="listar.html">LISTA</a>
         </nav>
       </header>
-
-    <ul id="candidatos"></ul>
-
-    <script>
-        async function buscaDados(){
-            const resposta = await fetch("http://localhost:8001/atletas")
-            if(resposta.status === 200){
-                const dados = await resposta.json()
-                const ul = document.getElementById("candidatos")
-                for (let i = 0; i < dados.length; i++) {
-                    const obj = dados[i];
-                    const li = document.createElement("li")
-                    li.innerText = `${obj.id} ${obj.nome}`
-                    ul.appendChild(li)
-                }
-            }else{
-                if(resposta.status === 400){
-                    const dados = await resposta.json()
-                    alert(dados.mensagem)
-                }else{
-                    alert("Erro Desconhecido!")
-                }
-            }
-        }
-        buscaDados()
-        </script>
 
         <footer>       
         <div id="footer_copyright">

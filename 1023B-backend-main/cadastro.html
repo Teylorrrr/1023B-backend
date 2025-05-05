@@ -3,42 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>cadastro estudante </title>
 </head>
 <body>
+
+    <header>
+        <i class="fa-regular fa-face-smile" style="color: #dedede;"></i>
+        <h1>CADASTRE SEU ATLETA</h1>
+        <nav>
+          <a href="index.html">MENU</a>
+          <a href="cadastro.html">CADASTRE</a>
+          <a href="listar.html">LISTA</a>
+        </nav>
+      </header>
+<div id="formulario">
+    <h2>Formulário de Cadastro</h2>
     <form onsubmit="event.preventDefault();trataForma()">
-        <input type="text" id="id" name="id" placeholder="id">
-        <input type="text" name="nome" id="nome" placeholder="nome">
-        <input type="text" name="idade" id="idade" placeholder="idade">
-        <input type="text" name="altura" id="altura" placeholder="altura">
-        <input type="text" name="forca" id="forca" placeholder="forca">
-        <input type="text" name="implusao" id="implusao" placeholder="implusao">
-        <input type="text" name="velocidade" id="velocidade" placeholder="velocidade">
-        <input type="text" name="resistencia" id="resistencia" placeholder="resistencia">
-        <input type="text" name="arremesso" id="arremesso" placeholder="arremesso">
-        <input type="submit" value="enviar">
+        <label>Id</label>
+        <input type="number" id="id" name="id" placeholder="id" required oninvalid="this.setCustomValidity('Por favor, preencha o ID')"
+        oninput="this.setCustomValidity('')">
+        <label>Nome</label>
+        <input type="text" name="nome" id="nome" placeholder="Ex: nome" required oninvalid="this.setCustomValidity('Por favor, preencha o nome')"
+        oninput="this.setCustomValidity('')">
+        <label>Idade</label>
+        <input type="number" name="idade" id="idade" placeholder="Ex: 18"min="5" max="80" required
+         oninvalid="this.setCustomValidity('Informe uma idade válida (entre 5 e 80)')"
+        oninput="this.setCustomValidity('')">
+        <label>Altura</label>
+        <input type="number" name="altura" id="altura" placeholder="Ex: 1.80"min="1" max="2.5" step="0.01" required
+         oninvalid="this.setCustomValidity('Informe uma altura válida (mínimo 0.60m e máximo 2.50m)')"
+        oninput="this.setCustomValidity('')">
+        <label>Força</label>
+        <input type="number" name="forca" id="forca" placeholder="de 1 a 5" min="1" max="5" required
+         oninvalid="this.setCustomValidity('Força deve estar entre 1 e 5')"
+        oninput="this.setCustomValidity('')">
+        <label>Impulsão</label>
+        <input type="number" name="implusao" id="implusao" placeholder="de 1 a 5" min="1" max="5" required
+         oninvalid="this.setCustomValidity('Impulsão deve estar entre 1 e 5')"
+        oninput="this.setCustomValidity('')">
+        <label>Velocidade</label>
+        <input type="number" name="velocidade" id="velocidade" placeholder="de 1 a 5" min="1" max="5" required 
+        oninvalid="this.setCustomValidity('Velocidade deve estar entre 1 e 5')"
+        oninput="this.setCustomValidity('')">
+        <label>Resistência</label>
+        <input type="number" name="resistencia" id="resistencia" placeholder="de 1 a 5" min="1" max="5" required 
+        oninvalid="this.setCustomValidity('Resistência deve estar entre 1 e 5')"
+        oninput="this.setCustomValidity('')">
+        <label>Arremesso</label>
+        <input type="number" name="arremesso" id="arremesso" placeholder="de 1 a 5" min="1" max="5" required 
+        oninvalid="this.setCustomValidity('Arremesso deve estar entre 1 e 5')"
+        oninput="this.setCustomValidity('')">
+        <input type="submit" value="cadastrar atleta">
+        <input type="reset" value="limpar">
     </form>
+</div>  
     <script>
        async function trataForma(){
             const idInput = document.getElementById("id")
             const idNome = document.getElementById("nome")
-            const ididade = document.getElementById("idade")
-            const idaltura = document.getElementById("altura")
-            const idforca = document.getElementById("forca")
-            const idimpulsao = document.getElementById("impulsao")
-            const idvelocidade = document.getElementById("velocidade")
-            const idresistencia = document.getElementById("resistencia")
-            const idarremesso = document.getElementById("arremesso")
+            const idIdade = document.getElementById("idade")
+            const idAltura = document.getElementById("altura")
+            const idForca = document.getElementById("forca")
+            const idImpulsao = document.getElementById("impulsao")
+            const idVelocidade = document.getElementById("velocidade")
+            const idResistencia = document.getElementById("resistencia")
+            const idArremesso = document.getElementById("arremesso")
             
             const id = idInput.value
             const nome = idNome.value
-            const nome = idNome.value
-            const nome = idNome.value
-            const nome = idNome.value
-            const nome = idNome.value
-            const nome = idNome.value
-            const nome = idNome.value
-            const nome = idNome.value
+            const idade = idIdade.value
+            const altura = idAltura.value
+            const forca = idForca.value
+            const impulsao = idImpulsao.value
+            const velocidade = idVelocidade.value
+            const resistencia = idResistencia.value
+            const arremesso = idArremesso.value
 
             const objaltetas = {
             id,
@@ -76,5 +117,10 @@
         
         }
     </script>
+         <footer>       
+            <div id="footer_copyright">
+                &#169 2023 Desenvolvimento por Teylor 1023B
+            </div>
+            </footer>
 </body>
 </html>

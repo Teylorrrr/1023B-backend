@@ -38,3 +38,113 @@ footer{
     justify-content: center;
 }
 /*footer e headera*/
+
+/*formulario*/
+    body {
+        background-color: #000000;
+        color: #987b3e;
+        margin: 0;
+        padding: 0;
+    }
+
+    #formulario {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    label {
+        font-weight: bold;
+        margin-bottom: -6px;
+    }
+
+    input[type="number"],
+    input[type="text"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    input[type="submit"],
+    input[type="reset"],
+    input[type="button"] {
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover,
+    input[type="reset"]:hover,
+    input[type="button"]:hover {
+        background-color: #0056b3;
+    }
+
+    .mensagem-sucesso {
+        margin-top: 15px;
+        padding: 10px;
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        border-radius: 5px;
+        display: none;
+        text-align: center;
+        font-weight: bold;
+    }
+
+/***formulario*/
+
+    #lista-atletas {
+        background-color: #ffffff;
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+    }
+
+    #lista-atletas h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    #candidatos {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    #candidatos li {
+        background-color: #f0f8ff;
+        border: 1px solid #cce5ff;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        padding: 15px;
+        font-size: 16px;
+        color: #333;
+        transition: background-color 0.3s;
+    }
+
+    #candidatos li:hover {
+        background-color: #e0f0ff;
+    }
