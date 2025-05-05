@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&display=swap');
+/*footer e headera*/
+header {
+    background-color:#0e0c0c;
+    color:  #987b3e;
+    text-align: center;
+    padding: 20px;
+}
+h1 {
+    font-size: 36px;
+}
+a {
+    text-decoration: none;
+    color: #fff;
+    margin: 10px;
+}
+nav {
+    text-align: center;
+    padding: 10px;
+}
+header nav a:hover {
+  color: #987b3e;
+  transition: color 0.3s; 
+}
+*{
+    font-family: 'inter',sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    letter-spacing: 1px;
+}
+footer{
+    width: 100%;
+    color: #987b3e;
+    background-color: #171717;
+    padding: 2rem 2.5rem;
+    display: flex;
+    justify-content: center;
+}
+/*footer e headera*/
