@@ -189,3 +189,54 @@ footer{
   }
 
     /*lista e delete*/
+
+    /*graficos*/
+    #area-graficos {
+        display: flex;
+        flex-wrap: wrap; /* Permite que as cartas quebrem para a próxima linha em telas menores */
+        justify-content: flex-start; /* Alinha as cartas à esquerda */
+        gap: 20px; /* Espaçamento entre as cartas */
+    }
+    .grafico-container {
+        width: 450px;
+        height: 450px;
+        border: 2px solid rgba(70, 90, 73, 0.247);
+        background-color: #fff;
+        display: flex;
+      }
+      .atleta-carta {
+        background-color:#0e0c0c;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        padding: 15px;
+        display: flex;
+        width: 450px;
+        height: 450px;
+        flex-direction: column; /* Organiza info e gráfico verticalmente */
+        align-items: center; /* Centraliza o conteúdo horizontalmente */
+        text-align: center; /* Centraliza o texto dentro da info */
+    }
+    
+    .atleta-info {
+        margin-bottom: 10px;
+        width: 100%; /* Garante que a info ocupe a largura total da carta */
+    }
+    .atleta-info p {
+        margin: 5px 0;
+        font-size: 1em;
+    }
+    .atleta-info strong {
+        font-weight: bold;
+    }
+    .grafico-container {
+        width: 80%; /* Ajuste a largura do gráfico conforme necessário */
+        max-width: 400px; /* Define uma largura máxima para o gráfico */
+        margin-top: 10px;
+    }
+    
+    /* Opcional: Estilos para os títulos dos gráficos se você ainda os tiver */
+    .grafico-container h2 {
+        font-size: 1.2em;
+        margin-bottom: 5px;
+    }
+    /**graficos*/

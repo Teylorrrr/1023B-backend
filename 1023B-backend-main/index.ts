@@ -102,6 +102,7 @@ app.post("/atletas", async (request: FastifyRequest, reply: FastifyReply) => {
          }
 
 })
+
 app.listen({ port: 8001 }, (erro, endereco) => {
     if (erro) {
         console.log("ERRO: Fastify não iniciou")
