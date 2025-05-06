@@ -23,7 +23,8 @@
 
     <div id="area-graficos"></div>
 
-    <button onclick="buscarGraficoPorId()">Buscar Jogador</button>
+    <button onclick="buscarGraficoPorId()">Buscar atleta</button>
+    <button onclick="filtrarAtletaPorStatus()">Filtrar atletas</button>
     <button onclick="gerarGraficoMedia()">Média de status</button>
     <h3>Comparar Gráficos</h3>
     <label>Escolha dois gráficos:</label>
@@ -47,6 +48,7 @@
             infoTexto.innerHTML = `
                 <p><strong>ID:</strong> ${atleta.id}</p>
                 <p><strong>Nome:</strong> ${atleta.nome}</p>
+                <p><strong>Idade:</strong> ${atleta.idade}</p>
                 <p><strong>Altura:</strong> ${atleta.altura} m</p>
             `;
 
