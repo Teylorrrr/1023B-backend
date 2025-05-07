@@ -14,113 +14,162 @@
         <i class="fa-regular fa-face-smile" style="color: #dedede;"></i>
         <h1>LISTA DE ATLETAS</h1>
         <nav>
-            <a href="index.html">MENU</a>
+            <a href="index.html">ATLETAS</a>
+            <a href="buscar.html">BUSCAR</a>
             <a href="cadastro.html">CADASTRE</a>
             <a href="listar.html">LISTA</a>
+          
         </nav>
     </header>
-    <h2>Atletas Cadastrados</h2>
 
+    <h2>Atletas Cadastrados</h2>
     <div id="area-graficos"></div>
 
-    <button onclick="buscarGraficoPorId()">Buscar atleta</button>
-    <button onclick="filtrarAtletaPorStatus()">Filtrar atletas</button>
-    <button onclick="gerarGraficoMedia()">Média de status</button>
-    <h3>Comparar Gráficos</h3>
-    <label>Escolha dois gráficos:</label>
-    <select id="grafico1"></select>
-    <select id="grafico2"></select>
-    <button onclick="compararGraficos()">Comparar</button>
-    <div id="comparacao"></div>
-
     <script>
-        const todosOsGraficos = [];
+   const todosOsGraficos = [];
 
-        // Função para criar e renderizar um gráfico radar para um atleta no formato de carta
-        function criarGrafico(atleta) {
-            const area = document.getElementById("area-graficos");
+function criarGrafico(atleta) {
+    const area = document.getElementById("area-graficos");
 
-            const cartaContainer = document.createElement("div");
-            cartaContainer.className = "atleta-carta";
+    const cartaContainer = document.createElement("div");
+    cartaContainer.className = "atleta-carta";
 
-            const infoTexto = document.createElement("div");
-            infoTexto.className = "atleta-info";
-            infoTexto.innerHTML = `
-                <p><strong>ID:</strong> ${atleta.id}</p>
-                <p><strong>Nome:</strong> ${atleta.nome}</p>
-                <p><strong>Idade:</strong> ${atleta.idade}</p>
-                <p><strong>Altura:</strong> ${atleta.altura} m</p>
-            `;
+    const infoTexto = document.createElement("div");
+    infoTexto.className = "atleta-info";
+    infoTexto.innerHTML = `
+        <p><strong>ID:</strong> ${atleta.id}</p>
+        <p><strong>Nome:</strong> ${atleta.nome}</p>
+        <p><strong>Idade:</strong> ${atleta.idade}</p>
+        <p><strong>Altura:</strong> ${atleta.altura} m</p>
+    `;
 
-            const canvasContainer = document.createElement("div");
-            canvasContainer.className = "grafico-container";
-            const canvas = document.createElement("canvas");
+    const canvasContainer = document.createElement("div");
+    canvasContainer.className = "grafico-container";
+    const canvas = document.createElement("canvas");
 
-            canvasContainer.appendChild(canvas);
-            cartaContainer.appendChild(infoTexto);
-            cartaContainer.appendChild(canvasContainer);
-            area.appendChild(cartaContainer);
+    canvasContainer.appendChild(canvas);
+    cartaContainer.appendChild(infoTexto);
+    cartaContainer.appendChild(canvasContainer);
+    area.appendChild(cartaContainer);
 
-            const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
 
-            new Chart(ctx, {
-                type: "radar",
-                data: {
-                    labels: ["Força", "Resistência", "Velocidade", "Impulsão", "Arremesso"],
-                    datasets: [{
-                        label: atleta.nome,
-                        data: [
-                            parseInt(atleta.forca) || 0,
-                            parseInt(atleta.resistencia) || 0,
-                            parseInt(atleta.velocidade) || 0,
-                            parseInt(atleta.impulsao) || 0,
-                            parseInt(atleta.arremesso) || 0
-                        ],
-                        backgroundColor: "rgba(54, 162, 235, 0.2)",
-                        borderColor: "rgba(54, 162, 235, 1)",
-                        pointBackgroundColor: "rgba(54, 162, 235, 1)"
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        r: {
-                            min: 1,
-                            max: 5,
-                            ticks: {
-                                stepSize: 1
-                            }
-                        }
-                    }
+    const dados = [
+        parseInt(atleta.forca) || 0,
+        parseInt(atleta.resistencia) || 0,
+        parseInt(atleta.velocidade) || 0,
+        parseInt(atleta.impulsao) || 0,
+        parseInt(atleta.arremesso) || 0
+    ];
+
+    // Salvar dados para a média depois
+    todosOsGraficos.push({ nome: atleta.nome, data: dados });
+
+    new Chart(ctx, {
+        type: "radar",
+        data: {
+            labels: ["Força", "Resistência", "Velocidade", "Impulsão", "Arremesso"],
+            datasets: [{
+                label: atleta.nome,
+                data: dados,
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                borderColor: "rgba(54, 162, 235, 1)",
+                pointBackgroundColor: "rgba(54, 162, 235, 1)"
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                r: {
+                    min: 1,
+                    max: 5,
+                    ticks: { stepSize: 1 }
                 }
-            });
-        }
-
-        // Carrega os dados da API e chama criarGrafico() para cada atleta
-        async function carregarAtletasEDesenharGraficos() {
-            try {
-                const resposta = await fetch("http://localhost:8001/atletas");
-                const atletas = await resposta.json();
-
-                atletas.forEach(atleta => {
-                    criarGrafico(atleta); // Agora passamos o objeto atleta inteiro
-                });
-            } catch (erro) {
-                console.error("Erro ao carregar atletas:", erro);
             }
         }
+    });
+}
 
-        // Inicia ao carregar a página
-        window.addEventListener("DOMContentLoaded", carregarAtletasEDesenharGraficos);
+function criarGraficoMedia(nome, dados, canvas) {
+    const ctx = canvas.getContext("2d");
 
-        // Funções futuras para gráfico de média e comparação (ainda não implementadas)
-        function gerarGraficoMedia() {
-            alert("Função para gerar gráfico de média ainda não implementada.");
+    new Chart(ctx, {
+        type: "radar",
+        data: {
+            labels: ["Força", "Resistência", "Velocidade", "Impulsão", "Arremesso"],
+            datasets: [{
+                label: nome,
+                data: dados,
+                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                borderColor: "rgba(255, 99, 132, 1)",
+                pointBackgroundColor: "rgba(255, 99, 132, 1)"
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                r: {
+                    min: 1,
+                    max: 5,
+                    ticks: { stepSize: 1 }
+                }
+            }
         }
+    });
+}
 
-        function compararGraficos() {
-            alert("Função para comparar gráficos ainda não implementada.");
-        }
+function graficoMedia() {
+    const area = document.getElementById("area-graficos");
+
+    if (todosOsGraficos.length === 0) return;
+
+    // Calcular a média
+    let soma = [0, 0, 0, 0, 0];
+    todosOsGraficos.forEach(grafico => {
+        grafico.data.forEach((valor, i) => soma[i] += valor);
+    });
+    let mediaData = soma.map(v => v / todosOsGraficos.length);
+
+    // Criar elementos
+    const cartaContainer = document.createElement("div");
+    cartaContainer.className = "atleta-carta";
+
+    const infoTexto = document.createElement("p");
+    infoTexto.textContent = "Média Geral de Status dos Atletas";
+
+    ///////////////
+    
+    ////////////////
+
+    const canvasContainer = document.createElement("div");
+    canvasContainer.className = "grafico-container";
+
+    const canvas = document.createElement("canvas");
+    canvasContainer.appendChild(canvas);
+
+    cartaContainer.appendChild(infoTexto);
+    cartaContainer.appendChild(canvasContainer);
+    area.appendChild(cartaContainer);
+
+    // Criar o gráfico
+    criarGraficoMedia("Média Geral", mediaData, canvas);
+}
+
+async function carregarAtletasEDesenharGraficos() {
+    try {
+        const resposta = await fetch("http://localhost:8001/atletas");
+        const atletas = await resposta.json();
+
+        atletas.forEach(atleta => criarGrafico(atleta));
+
+        graficoMedia(); // Chama depois de todos os gráficos individuais
+    } catch (erro) {
+        console.error("Erro ao carregar atletas:", erro);
+    }
+}
+
+window.addEventListener("DOMContentLoaded", carregarAtletasEDesenharGraficos);
+
     </script>
 
     <footer>

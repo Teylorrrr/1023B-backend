@@ -199,7 +199,7 @@ footer{
     }
     .grafico-container {
         width: 450px;
-        height: 450px;
+        height: 400px;
         border: 2px solid rgba(70, 90, 73, 0.247);
         background-color: #fff;
         display: flex;
@@ -211,7 +211,7 @@ footer{
         padding: 15px;
         display: flex;
         width: 450px;
-        height: 450px;
+        height: 550px;
         flex-direction: column; /* Organiza info e gráfico verticalmente */
         align-items: center; /* Centraliza o conteúdo horizontalmente */
         text-align: center; /* Centraliza o texto dentro da info */
