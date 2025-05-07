@@ -1,40 +1,126 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="style.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Peneira - Lista de Atletas</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" />
+  <title>Listagem de atletas</title>
 </head>
-
 <body>
-    <header>
-        <i class="fa-regular fa-face-smile" style="color: #dedede;"></i>
-        <h1>LISTA DE ATLETAS</h1>
-        <nav>
-            <a href="index.html">ATLETAS</a>
-            <a href="buscar.html">BUSCAR</a>
-            <a href="cadastro.html">CADASTRE</a>
-            <a href="listar.html">LISTA</a>
-          
-        </nav>
-    </header>
-    <button onclick="buscarGraficoPorId()">Buscar atleta</button>
-    <button onclick="filtrarAtletaPorStatus()">Filtrar atletas</button>
-    
-    <h3>Comparar Gráficos</h3>
-    <label>Escolha dois gráficos:</label>
-    <select id="grafico1"></select>
-    <select id="grafico2"></select>
-    <button onclick="compararGraficos()">Comparar</button>
-    <div id="comparacao"></div>
+  <header>
+    <i class="fa-regular fa-face-smile" style="color: #dedede;"></i>
+    <h1>CADASTRE SEU ATLETA</h1>
+    <nav>
+      <a href="index.html">ATLETAS</a>
+      <a href="buscar.html">BUSCAR</a>
+      <a href="cadastro.html">CADASTRE</a>
+      <a href="listar.html">LISTA</a>
+    </nav>
+  </header>
+  <h1>Comparar Atletas</h1>
 
-    <footer>
-        <div id="footer_copyright">
-            &#169 2023 Desenvolvimento por Teylor 1023B
-        </div>
-    </footer>
+  <label for="atleta1">Escolha o primeiro atleta (por ID):</label>
+  <select id="atleta1"></select>
+
+  <label for="atleta2">Escolha o segundo atleta (por ID):</label>
+  <select id="atleta2"></select>
+
+  <button onclick="comparar()">Comparar</button>
+  <button onclick="limparGrafico()">Limpar Gráfico</button>
+
+  <canvas id="graficoRadar" width="400" height="400"></canvas>
+
+  <script>
+    let chart = null;
+
+    async function carregarAtletas() {
+      const resposta = await fetch("http://localhost:8001/atletas");
+      const atletas = await resposta.json();
+      const select1 = document.getElementById("atleta1");
+      const select2 = document.getElementById("atleta2");
+
+      atletas.forEach(atleta => {
+        const option1 = new Option(`${atleta.id} - ${atleta.nome}`, atleta.id);
+        const option2 = new Option(`${atleta.id} - ${atleta.nome}`, atleta.id);
+        select1.add(option1);
+        select2.add(option2);
+      });
+    }
+
+    // Busca dados do atleta por ID
+    async function buscarAtletaPorId(id) {
+      const resposta = await fetch(`http://localhost:8001/atletas/${id}`);
+      return await resposta.json();
+    }
+
+    async function comparar() {
+      const id1 = document.getElementById("atleta1").value;
+      const id2 = document.getElementById("atleta2").value;
+
+      if (id1 === id2) {
+        alert("Selecione dois atletas diferentes.");
+        return;
+      }
+
+      const atleta1 = await buscarAtletaPorId(id1);
+      const atleta2 = await buscarAtletaPorId(id2);
+
+      const labels = ['Força', 'Impulsão', 'Velocidade', 'Resistência', 'Arremesso'];
+      const dados1 = [atleta1.forca, atleta1.impulsao, atleta1.velocidade, atleta1.resistencia, atleta1.arremesso];
+      const dados2 = [atleta2.forca, atleta2.impulsao, atleta2.velocidade, atleta2.resistencia, atleta2.arremesso];
+
+      const data = {
+        labels,
+        datasets: [
+          {
+            label: atleta1.nome,
+            data: dados1,
+            fill: true,
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgb(255, 99, 132)",
+            pointBackgroundColor: "rgb(255, 99, 132)"
+          },
+          {
+            label: atleta2.nome,
+            data: dados2,
+            fill: true,
+            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            borderColor: "rgb(54, 162, 235)",
+            pointBackgroundColor: "rgb(54, 162, 235)"
+          }
+        ]
+      };
+
+      const config = {
+        type: 'radar',
+        data: data,
+        options: {
+          elements: {
+            line: {
+              borderWidth: 3
+            }
+          }
+        }
+      };
+
+      if (chart) chart.destroy();
+      chart = new Chart(document.getElementById("graficoRadar"), config);
+    }
+
+    function limparGrafico() {
+      if (chart) {
+        chart.destroy();
+        chart = null;
+      }
+    }
+
+    carregarAtletas();
+  </script>
+   <footer>
+    <div id="footer_copyright">
+      &#169 2023 Desenvolvimento por Teylor 1023B
+    </div>
+  </footer>
 </body>
 </html>
