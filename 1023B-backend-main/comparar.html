@@ -14,114 +14,224 @@
     <h1>CADASTRE SEU ATLETA</h1>
     <nav>
       <a href="index.html">ATLETAS</a>
-      <a href="buscar.html">BUSCAR</a>
       <a href="cadastro.html">CADASTRE</a>
-      <a href="listar.html">LISTA</a>
-      <a href="destaques.html">DESTAQUES</a>
       <a href="comparar.html">COMPARAR</a>
+      <a href="destaques.html">DESTAQUES</a>
+      <a href="listar.html">LISTA</a>
     </nav>
   </header>
 
-  
+  <h2>Comparar Atletas</h2>
+  <section class="comparar-form">
+    <label for="atleta1">Primeiro atleta:</label>
+    <select id="atleta1"></select>
 
-  <main>
-    <section>
-      <h2>Comparar Atletas</h2>
-      <label for="atleta1">Primeiro atleta (ID):</label>
-      <select id="atleta1"></select>
+    <label for="atleta2">Segundo atleta:</label>
+    <select id="atleta2"></select>
 
-      <label for="atleta2">Segundo atleta (ID):</label>
-      <select id="atleta2"></select>
+    <button onclick="comparar()">Comparar</button>
+    <button onclick="limparGraficoComparacao()">Limpar Gráfico</button>
 
-      <button onclick="comparar()">Comparar</button>
-      <button onclick="limparGrafico()">Limpar Gráfico</button>
-      <div id="area-graficos"></div>
-    </section>
-  </main>
+    <div id="grafico-comparacao" class="atleta-carta"></div>
+  </section>
+
+  <h2>Atletas Cadastrados</h2>
+  <div id="area-graficos"></div>
 
   <script>
-    let chart = null;
+    const todosOsGraficos = [];
 
-    async function carregarAtletas() {
-      const resposta = await fetch("http://localhost:8001/atletas");
-      const atletas = await resposta.json();
+    function criarGrafico(atleta) {
+      const area = document.getElementById("area-graficos");
 
-      const select1 = document.getElementById("atleta1");
-      const select2 = document.getElementById("atleta2");
+      const cartaContainer = document.createElement("div");
+      cartaContainer.className = "atleta-carta";
 
-      atletas.forEach(atleta => {
-        const option = new Option(`${atleta.id} - ${atleta.nome}`, atleta.id);
-        select1.add(option.cloneNode(true));
-        select2.add(option.cloneNode(true));
+      const infoTexto = document.createElement("div");
+      infoTexto.className = "atleta-info";
+      infoTexto.innerHTML = `
+        <p><strong>ID:</strong> ${atleta.id}</p>
+        <p><strong>Nome:</strong> ${atleta.nome}</p>
+        <p><strong>Idade:</strong> ${atleta.idade}</p>
+        <p><strong>Altura:</strong> ${atleta.altura} m</p>
+      `;
+
+      const canvasContainer = document.createElement("div");
+      canvasContainer.className = "grafico-container";
+      const canvas = document.createElement("canvas");
+
+      canvasContainer.appendChild(canvas);
+      cartaContainer.appendChild(infoTexto);
+      cartaContainer.appendChild(canvasContainer);
+      area.appendChild(cartaContainer);
+
+      const ctx = canvas.getContext("2d");
+
+      const dados = [
+        parseInt(atleta.forca) || 0,
+        parseInt(atleta.resistencia) || 0,
+        parseInt(atleta.velocidade) || 0,
+        parseInt(atleta.impulsao) || 0,
+        parseInt(atleta.arremesso) || 0
+      ];
+
+      todosOsGraficos.push({ nome: atleta.nome, data: dados });
+
+      new Chart(ctx, {
+        type: "radar",
+        data: {
+          labels: ["Força", "Resistência", "Velocidade", "Impulsão", "Arremesso"],
+          datasets: [{
+            label: atleta.nome,
+            data: dados,
+            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            borderColor: "rgba(54, 162, 235, 1)",
+            pointBackgroundColor: "rgba(54, 162, 235, 1)"
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            r: { min: 1, max: 5, ticks: { stepSize: 1 } }
+          }
+        }
       });
     }
+
+    function criarGraficoMedia(nome, dados, canvas) {
+      const ctx = canvas.getContext("2d");
+      new Chart(ctx, {
+        type: "radar",
+        data: {
+          labels: ["Força", "Resistência", "Velocidade", "Impulsão", "Arremesso"],
+          datasets: [{
+            label: nome,
+            data: dados,
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgba(255, 99, 132, 1)",
+            pointBackgroundColor: "rgba(255, 99, 132, 1)"
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            r: { min: 1, max: 5, ticks: { stepSize: 1 } }
+          }
+        }
+      });
+    }
+
+    function graficoMedia() {
+      const area = document.getElementById("area-graficos");
+      if (todosOsGraficos.length === 0) return;
+
+      let soma = [0, 0, 0, 0, 0];
+      todosOsGraficos.forEach(grafico => {
+        grafico.data.forEach((valor, i) => soma[i] += valor);
+      });
+      let mediaData = soma.map(v => v / todosOsGraficos.length);
+
+      const cartaContainer = document.createElement("div");
+      cartaContainer.className = "atleta-carta";
+
+      const infoTexto = document.createElement("p");
+      infoTexto.textContent = "Média Geral de Status dos Atletas";
+
+      const canvasContainer = document.createElement("div");
+      canvasContainer.className = "grafico-container";
+
+      const canvas = document.createElement("canvas");
+      canvasContainer.appendChild(canvas);
+
+      cartaContainer.appendChild(infoTexto);
+      cartaContainer.appendChild(canvasContainer);
+      area.appendChild(cartaContainer);
+
+      criarGraficoMedia("Média Geral", mediaData, canvas);
+    }
+
+    async function carregarAtletasEDesenharGraficos() {
+      try {
+        const resposta = await fetch("http://localhost:8001/atletas");
+        const atletas = await resposta.json();
+
+        const sel1 = document.getElementById("atleta1");
+        const sel2 = document.getElementById("atleta2");
+
+        atletas.forEach(atleta => {
+          criarGrafico(atleta);
+
+          const opt1 = new Option(`${atleta.nome} (${atleta.id})`, atleta.id);
+          const opt2 = new Option(`${atleta.nome} (${atleta.id})`, atleta.id);
+          sel1.add(opt1);
+          sel2.add(opt2);
+        });
+
+        graficoMedia();
+      } catch (erro) {
+        console.error("Erro ao carregar atletas:", erro);
+      }
+    }
+
+    let comparacaoChart = null;
 
     async function comparar() {
       const id1 = document.getElementById("atleta1").value;
       const id2 = document.getElementById("atleta2").value;
-
-      if (id1 === id2) {
+      if (!id1 || !id2 || id1 === id2) {
         alert("Selecione dois atletas diferentes.");
         return;
       }
 
-      const atleta1 = await buscarAtletaPorId(id1);
-      const atleta2 = await buscarAtletaPorId(id2);
+      const resposta = await fetch("http://localhost:8001/atletas");
+      const atletas = await resposta.json();
+      const atleta1 = atletas.find(a => a.id == id1);
+      const atleta2 = atletas.find(a => a.id == id2);
+
       if (!atleta1 || !atleta2) return;
 
-      const labels = ['Força', 'Impulsão', 'Velocidade', 'Resistência', 'Arremesso'];
-      const dados1 = [atleta1.forca, atleta1.impulsao, atleta1.velocidade, atleta1.resistencia, atleta1.arremesso];
-      const dados2 = [atleta2.forca, atleta2.impulsao, atleta2.velocidade, atleta2.resistencia, atleta2.arremesso];
+      const dados1 = [atleta1.forca, atleta1.resistencia, atleta1.velocidade, atleta1.impulsao, atleta1.arremesso];
+      const dados2 = [atleta2.forca, atleta2.resistencia, atleta2.velocidade, atleta2.impulsao, atleta2.arremesso];
 
-      const config = {
+      const container = document.getElementById("grafico-comparacao");
+      container.innerHTML = ""; // limpa conteúdo anterior
+
+      const canvas = document.createElement("canvas");
+      container.appendChild(canvas);
+
+      if (comparacaoChart) comparacaoChart.destroy();
+      comparacaoChart = new Chart(canvas, {
         type: 'radar',
         data: {
-          labels,
+          labels: ["Força", "Resistência", "Velocidade", "Impulsão", "Arremesso"],
           datasets: [
             {
               label: atleta1.nome,
               data: dados1,
-              fill: true,
-              backgroundColor: "rgba(255, 99, 132, 0.2)",
-              borderColor: "rgb(255, 99, 132)",
-              pointBackgroundColor: "rgb(255, 99, 132)"
+              backgroundColor: "rgba(255,99,132,0.2)",
+              borderColor: "rgb(255,99,132)"
             },
             {
               label: atleta2.nome,
               data: dados2,
-              fill: true,
-              backgroundColor: "rgba(54, 162, 235, 0.2)",
-              borderColor: "rgb(54, 162, 235)",
-              pointBackgroundColor: "rgb(54, 162, 235)"
+              backgroundColor: "rgba(54,162,235,0.2)",
+              borderColor: "rgb(54,162,235)"
             }
           ]
         },
         options: {
-          elements: { line: { borderWidth: 3 } }
+          responsive: true,
+          scales: { r: { beginAtZero: true, min: 1, max: 5, ticks: { stepSize: 1 } } }
         }
-      };
-
-      if (chart) chart.destroy();
-
-      const areaGraficos = document.getElementById("area-graficos");
-      areaGraficos.innerHTML = ""; // limpa área
-      const novoCanvas = document.createElement("canvas");
-      novoCanvas.id = "graficoRadar";
-      areaGraficos.appendChild(novoCanvas);
-
-      const ctx = novoCanvas.getContext("2d");
-      chart = new Chart(ctx, config);
+      });
     }
 
-    function limparGrafico() {
-      if (chart) {
-        chart.destroy();
-        chart = null;
-      }
-      document.getElementById("area-graficos").innerHTML = "";
+    function limparGraficoComparacao() {
+      if (comparacaoChart) comparacaoChart.destroy();
+      document.getElementById("grafico-comparacao").innerHTML = "";
     }
 
-    carregarAtletas();
+    window.addEventListener("DOMContentLoaded", carregarAtletasEDesenharGraficos);
   </script>
 
   <footer>
@@ -131,4 +241,3 @@
   </footer>
 </body>
 </html>
-

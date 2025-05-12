@@ -14,22 +14,15 @@
     <h1>CADASTRE SEU ATLETA</h1>
     <nav>
       <a href="index.html">ATLETAS</a>
-      <a href="buscar.html">BUSCAR</a>
       <a href="cadastro.html">CADASTRE</a>
-      <a href="listar.html">LISTA</a>
-      <a href="destaques.html">DESTAQUES</a>
       <a href="comparar.html">COMPARAR</a>
+      <a href="destaques.html">DESTAQUES</a>
+      <a href="listar.html">LISTA</a>
     </nav>
   </header>
 
-  <main>
-    <section>
-      <h2>Buscar Atleta por ID</h2>
-      <input type="number" id="buscaId" placeholder="Digite o ID do atleta" />
-      <button onclick="buscarPorId()">Buscar</button>
-      <div id="resultadoBusca"></div>
-    </section>
 
+<main>
     <section>
       <h2>Top 3 Atletas por Quesito</h2>
       <label for="atributoBusca">Selecione o quesito:</label>
@@ -73,22 +66,6 @@
       }
     }
 
-    async function buscarPorId() {
-      const id = document.getElementById("buscaId").value;
-      const resultadoDiv = document.getElementById("resultadoBusca");
-      resultadoDiv.innerHTML = "";
-
-      const atleta = await buscarAtletaPorId(id);
-      if (atleta) {
-        resultadoDiv.innerHTML = `
-          <p><strong>Nome:</strong> ${atleta.nome}</p>
-          <p><strong>Status:</strong> ${atleta.status}</p>
-          <p><strong>Força:</strong> ${atleta.forca}</p>
-          <p><strong>Velocidade:</strong> ${atleta.velocidade}</p>
-        `;
-      }
-    }
-
     async function buscarTop3PorAtributo() {
   const atributo = document.getElementById("atributoBusca").value;
   const resposta = await fetch("http://localhost:8001/atletas");
@@ -115,74 +92,8 @@
   });
 }
 
-    async function comparar() {
-      const id1 = document.getElementById("atleta1").value;
-      const id2 = document.getElementById("atleta2").value;
-
-      if (id1 === id2) {
-        alert("Selecione dois atletas diferentes.");
-        return;
-      }
-
-      const atleta1 = await buscarAtletaPorId(id1);
-      const atleta2 = await buscarAtletaPorId(id2);
-      if (!atleta1 || !atleta2) return;
-
-      const labels = ['Força', 'Impulsão', 'Velocidade', 'Resistência', 'Arremesso'];
-      const dados1 = [atleta1.forca, atleta1.impulsao, atleta1.velocidade, atleta1.resistencia, atleta1.arremesso];
-      const dados2 = [atleta2.forca, atleta2.impulsao, atleta2.velocidade, atleta2.resistencia, atleta2.arremesso];
-
-      const config = {
-        type: 'radar',
-        data: {
-          labels,
-          datasets: [
-            {
-              label: atleta1.nome,
-              data: dados1,
-              fill: true,
-              backgroundColor: "rgba(255, 99, 132, 0.2)",
-              borderColor: "rgb(255, 99, 132)",
-              pointBackgroundColor: "rgb(255, 99, 132)"
-            },
-            {
-              label: atleta2.nome,
-              data: dados2,
-              fill: true,
-              backgroundColor: "rgba(54, 162, 235, 0.2)",
-              borderColor: "rgb(54, 162, 235)",
-              pointBackgroundColor: "rgb(54, 162, 235)"
-            }
-          ]
-        },
-        options: {
-          elements: { line: { borderWidth: 3 } }
-        }
-      };
-
-      if (chart) chart.destroy();
-
-      const areaGraficos = document.getElementById("area-graficos");
-      areaGraficos.innerHTML = ""; // limpa área
-      const novoCanvas = document.createElement("canvas");
-      novoCanvas.id = "graficoRadar";
-      areaGraficos.appendChild(novoCanvas);
-
-      const ctx = novoCanvas.getContext("2d");
-      chart = new Chart(ctx, config);
-    }
-
-    function limparGrafico() {
-      if (chart) {
-        chart.destroy();
-        chart = null;
-      }
-      document.getElementById("area-graficos").innerHTML = "";
-    }
-
     carregarAtletas();
   </script>
-
   <footer>
     <div id="footer_copyright">
       &#169 2023 Desenvolvimento por Teylor 1023B
