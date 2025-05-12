@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="style.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" />
   <title>Comparar Atletas</title>
 </head>
 <body>
@@ -21,160 +20,53 @@
     </nav>
   </header>
 
-  <h2>Comparar Atletas</h2>
-  <section class="comparar-form">
-    <label for="atleta1">Primeiro atleta:</label>
-    <select id="atleta1"></select>
+  <main>
+    <section>
+      <h2>Comparar Atletas</h2>
+      <div class="comparar-form">
+        <label for="atleta1">Primeiro atleta (ID):</label>
+        <select id="atleta1"></select>
 
-    <label for="atleta2">Segundo atleta:</label>
-    <select id="atleta2"></select>
+        <label for="atleta2">Segundo atleta (ID):</label>
+        <select id="atleta2"></select>
 
-    <button onclick="comparar()">Comparar</button>
-    <button onclick="limparGraficoComparacao()">Limpar Gráfico</button>
+        <button onclick="comparar()">Comparar</button>
+        <button onclick="limparTodosGraficoComparacao()">Limpar Gráficos</button>
+      </div>
 
-    <div id="grafico-comparacao" class="atleta-carta"></div>
-  </section>
-
-  <h2>Atletas Cadastrados</h2>
-  <div id="area-graficos"></div>
+      <!-- Aqui acumulamos as cartas de comparação -->
+      <div id="area-graficos"></div>
+    </section>
+  </main>
 
   <script>
-    const todosOsGraficos = [];
-
-    function criarGrafico(atleta) {
-      const area = document.getElementById("area-graficos");
-
-      const cartaContainer = document.createElement("div");
-      cartaContainer.className = "atleta-carta";
-
-      const infoTexto = document.createElement("div");
-      infoTexto.className = "atleta-info";
-      infoTexto.innerHTML = `
-        <p><strong>ID:</strong> ${atleta.id}</p>
-        <p><strong>Nome:</strong> ${atleta.nome}</p>
-        <p><strong>Idade:</strong> ${atleta.idade}</p>
-        <p><strong>Altura:</strong> ${atleta.altura} m</p>
-      `;
-
-      const canvasContainer = document.createElement("div");
-      canvasContainer.className = "grafico-container";
-      const canvas = document.createElement("canvas");
-
-      canvasContainer.appendChild(canvas);
-      cartaContainer.appendChild(infoTexto);
-      cartaContainer.appendChild(canvasContainer);
-      area.appendChild(cartaContainer);
-
-      const ctx = canvas.getContext("2d");
-
-      const dados = [
-        parseInt(atleta.forca) || 0,
-        parseInt(atleta.resistencia) || 0,
-        parseInt(atleta.velocidade) || 0,
-        parseInt(atleta.impulsao) || 0,
-        parseInt(atleta.arremesso) || 0
-      ];
-
-      todosOsGraficos.push({ nome: atleta.nome, data: dados });
-
-      new Chart(ctx, {
-        type: "radar",
-        data: {
-          labels: ["Força", "Resistência", "Velocidade", "Impulsão", "Arremesso"],
-          datasets: [{
-            label: atleta.nome,
-            data: dados,
-            backgroundColor: "rgba(54, 162, 235, 0.2)",
-            borderColor: "rgba(54, 162, 235, 1)",
-            pointBackgroundColor: "rgba(54, 162, 235, 1)"
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            r: { min: 1, max: 5, ticks: { stepSize: 1 } }
-          }
-        }
-      });
-    }
-
-    function criarGraficoMedia(nome, dados, canvas) {
-      const ctx = canvas.getContext("2d");
-      new Chart(ctx, {
-        type: "radar",
-        data: {
-          labels: ["Força", "Resistência", "Velocidade", "Impulsão", "Arremesso"],
-          datasets: [{
-            label: nome,
-            data: dados,
-            backgroundColor: "rgba(255, 99, 132, 0.2)",
-            borderColor: "rgba(255, 99, 132, 1)",
-            pointBackgroundColor: "rgba(255, 99, 132, 1)"
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            r: { min: 1, max: 5, ticks: { stepSize: 1 } }
-          }
-        }
-      });
-    }
-
-    function graficoMedia() {
-      const area = document.getElementById("area-graficos");
-      if (todosOsGraficos.length === 0) return;
-
-      let soma = [0, 0, 0, 0, 0];
-      todosOsGraficos.forEach(grafico => {
-        grafico.data.forEach((valor, i) => soma[i] += valor);
-      });
-      let mediaData = soma.map(v => v / todosOsGraficos.length);
-
-      const cartaContainer = document.createElement("div");
-      cartaContainer.className = "atleta-carta";
-
-      const infoTexto = document.createElement("p");
-      infoTexto.textContent = "Média Geral de Status dos Atletas";
-
-      const canvasContainer = document.createElement("div");
-      canvasContainer.className = "grafico-container";
-
-      const canvas = document.createElement("canvas");
-      canvasContainer.appendChild(canvas);
-
-      cartaContainer.appendChild(infoTexto);
-      cartaContainer.appendChild(canvasContainer);
-      area.appendChild(cartaContainer);
-
-      criarGraficoMedia("Média Geral", mediaData, canvas);
-    }
-
-    async function carregarAtletasEDesenharGraficos() {
+    // 1) Preenche os selects
+    async function carregarAtletas() {
       try {
-        const resposta = await fetch("http://localhost:8001/atletas");
-        const atletas = await resposta.json();
-
+        const resp = await fetch("http://localhost:8001/atletas");
+        const atletas = await resp.json();
         const sel1 = document.getElementById("atleta1");
         const sel2 = document.getElementById("atleta2");
-
-        atletas.forEach(atleta => {
-          criarGrafico(atleta);
-
-          const opt1 = new Option(`${atleta.nome} (${atleta.id})`, atleta.id);
-          const opt2 = new Option(`${atleta.nome} (${atleta.id})`, atleta.id);
-          sel1.add(opt1);
-          sel2.add(opt2);
+        atletas.forEach(a => {
+          const opt = new Option(`${a.id} – ${a.nome}`, a.id);
+          sel1.add(opt.cloneNode(true));
+          sel2.add(opt.cloneNode(true));
         });
-
-        graficoMedia();
-      } catch (erro) {
-        console.error("Erro ao carregar atletas:", erro);
+      } catch (e) {
+        console.error(e);
+        alert("Erro ao carregar atletas.");
       }
     }
 
-    let comparacaoChart = null;
+    // 2) Busca todos e filtra no front
+    async function buscarAtletaPorId(id) {
+      const resp = await fetch("http://localhost:8001/atletas");
+      if (!resp.ok) throw new Error();
+      const atletas = await resp.json();
+      return atletas.find(a => String(a.id) === String(id)) || null;
+    }
 
+    // 3) Cada comparar() gera UMA NOVA carta com seu gráfico
     async function comparar() {
       const id1 = document.getElementById("atleta1").value;
       const id2 = document.getElementById("atleta2").value;
@@ -183,57 +75,62 @@
         return;
       }
 
-      const resposta = await fetch("http://localhost:8001/atletas");
-      const atletas = await resposta.json();
-      const atleta1 = atletas.find(a => a.id == id1);
-      const atleta2 = atletas.find(a => a.id == id2);
+      const at1 = await buscarAtletaPorId(id1);
+      const at2 = await buscarAtletaPorId(id2);
+      if (!at1 || !at2) return;
 
-      if (!atleta1 || !atleta2) return;
+      // cria container da carta
+      const carta = document.createElement("div");
+      carta.className = "atleta-carta";
 
-      const dados1 = [atleta1.forca, atleta1.resistencia, atleta1.velocidade, atleta1.impulsao, atleta1.arremesso];
-      const dados2 = [atleta2.forca, atleta2.resistencia, atleta2.velocidade, atleta2.impulsao, atleta2.arremesso];
+      // info do atleta
+      const info = document.createElement("div");
+      info.className = "atleta-info";
+      info.innerHTML = `
+        <p><strong>${at1.nome}</strong> vs <strong>${at2.nome}</strong></p>
+        <p><strong>ID:</strong> ${at1.id} vs ${at2.id}</p>
+      `;
 
-      const container = document.getElementById("grafico-comparacao");
-      container.innerHTML = ""; // limpa conteúdo anterior
-
+      // container do gráfico
+      const grafContainer = document.createElement("div");
+      grafContainer.className = "grafico-container";
       const canvas = document.createElement("canvas");
-      container.appendChild(canvas);
+      grafContainer.appendChild(canvas);
 
-      if (comparacaoChart) comparacaoChart.destroy();
-      comparacaoChart = new Chart(canvas, {
+      carta.appendChild(info);
+      carta.appendChild(grafContainer);
+      document.getElementById("area-graficos").appendChild(carta);
+
+      // prepara dados
+      const labels = ["Força","Resistência","Velocidade","Impulsão","Arremesso"];
+      const dados1 = [at1.forca, at1.resistencia, at1.velocidade, at1.impulsao, at1.arremesso];
+      const dados2 = [at2.forca, at2.resistencia, at2.velocidade, at2.impulsao, at2.arremesso];
+
+      // desenha gráfico novo
+      new Chart(canvas.getContext("2d"), {
         type: 'radar',
         data: {
-          labels: ["Força", "Resistência", "Velocidade", "Impulsão", "Arremesso"],
+          labels,
           datasets: [
-            {
-              label: atleta1.nome,
-              data: dados1,
-              backgroundColor: "rgba(255,99,132,0.2)",
-              borderColor: "rgb(255,99,132)"
-            },
-            {
-              label: atleta2.nome,
-              data: dados2,
-              backgroundColor: "rgba(54,162,235,0.2)",
-              borderColor: "rgb(54,162,235)"
-            }
+            { label: at1.nome, data: dados1, fill: true, backgroundColor:"rgba(255,99,132,0.2)", borderColor:"rgb(255,99,132)" },
+            { label: at2.nome, data: dados2, fill: true, backgroundColor:"rgba(54,162,235,0.2)", borderColor:"rgb(54,162,235)" }
           ]
         },
         options: {
           responsive: true,
-          scales: { r: { beginAtZero: true, min: 1, max: 5, ticks: { stepSize: 1 } } }
+          scales: { r: { beginAtZero:true, min:1, max:5, ticks:{ stepSize:1 } } }
         }
       });
     }
 
-    function limparGraficoComparacao() {
-      if (comparacaoChart) comparacaoChart.destroy();
-      document.getElementById("grafico-comparacao").innerHTML = "";
+    // 4) Limpa todas as comparações
+    function limparTodosGraficoComparacao() {
+      document.getElementById("area-graficos").innerHTML = "";
     }
 
-    window.addEventListener("DOMContentLoaded", carregarAtletasEDesenharGraficos);
+    window.addEventListener("DOMContentLoaded", carregarAtletas);
   </script>
-
+  
   <footer>
     <div id="footer_copyright">
       &#169 2023 Desenvolvimento por Teylor 1023B
