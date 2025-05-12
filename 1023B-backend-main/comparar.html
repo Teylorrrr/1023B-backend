@@ -22,26 +22,20 @@
     </nav>
   </header>
 
+  
+
   <main>
     <section>
-      <h2>Buscar Atleta por ID</h2>
-      <input type="number" id="buscaId" placeholder="Digite o ID do atleta" />
-      <button onclick="buscarPorId()">Buscar</button>
-      <div id="resultadoBusca"></div>
-    </section>
+      <h2>Comparar Atletas</h2>
+      <label for="atleta1">Primeiro atleta (ID):</label>
+      <select id="atleta1"></select>
 
-    <section>
-      <h2>Top 3 Atletas por Quesito</h2>
-      <label for="atributoBusca">Selecione o quesito:</label>
-      <select id="atributoBusca">
-        <option value="forca">Força</option>
-        <option value="impulsao">Impulsão</option>
-        <option value="velocidade">Velocidade</option>
-        <option value="resistencia">Resistência</option>
-        <option value="arremesso">Arremesso</option>
-      </select>
-      <button onclick="buscarTop3PorAtributo()">Buscar Top 3</button>
-      <ul id="listaStatus"></ul>
+      <label for="atleta2">Segundo atleta (ID):</label>
+      <select id="atleta2"></select>
+
+      <button onclick="comparar()">Comparar</button>
+      <button onclick="limparGrafico()">Limpar Gráfico</button>
+      <div id="area-graficos"></div>
     </section>
   </main>
 
@@ -61,59 +55,6 @@
         select2.add(option.cloneNode(true));
       });
     }
-
-    async function buscarAtletaPorId(id) {
-      try {
-        const resposta = await fetch(`http://localhost:8001/atletas/${id}`);
-        if (!resposta.ok) throw new Error("Atleta não encontrado");
-        return await resposta.json();
-      } catch (error) {
-        alert(error.message);
-        return null;
-      }
-    }
-
-    async function buscarPorId() {
-      const id = document.getElementById("buscaId").value;
-      const resultadoDiv = document.getElementById("resultadoBusca");
-      resultadoDiv.innerHTML = "";
-
-      const atleta = await buscarAtletaPorId(id);
-      if (atleta) {
-        resultadoDiv.innerHTML = `
-          <p><strong>Nome:</strong> ${atleta.nome}</p>
-          <p><strong>Status:</strong> ${atleta.status}</p>
-          <p><strong>Força:</strong> ${atleta.forca}</p>
-          <p><strong>Velocidade:</strong> ${atleta.velocidade}</p>
-        `;
-      }
-    }
-
-    async function buscarTop3PorAtributo() {
-  const atributo = document.getElementById("atributoBusca").value;
-  const resposta = await fetch("http://localhost:8001/atletas");
-  const atletas = await resposta.json();
-
-  // Ordenar decrescentemente pelo atributo escolhido
-  const top3 = atletas
-    .filter(a => typeof a[atributo] === 'number') // garantir que o atributo exista e seja numérico
-    .sort((a, b) => b[atributo] - a[atributo])
-    .slice(0, 3);
-
-  const lista = document.getElementById("listaStatus");
-  lista.innerHTML = "";
-
-  if (top3.length === 0) {
-    lista.innerHTML = "<li>Nenhum atleta encontrado.</li>";
-    return;
-  }
-
-  top3.forEach((atleta, index) => {
-    const li = document.createElement("li");
-    li.textContent = `${index + 1}º - ${atleta.nome} [ ${atleta.id} ] (${atributo}: ${atleta[atributo]})`;
-    lista.appendChild(li);
-  });
-}
 
     async function comparar() {
       const id1 = document.getElementById("atleta1").value;
@@ -190,3 +131,4 @@
   </footer>
 </body>
 </html>
+

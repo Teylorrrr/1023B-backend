@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="style.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>cadastro estudante </title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" />
+  <title>Comparar Atletas</title>
 </head>
 <body>
+  <header>
+    <i class="fa-regular fa-face-smile" style="color: #dedede;"></i>
+    <h1>CADASTRE SEU ATLETA</h1>
+    <nav>
+      <a href="index.html">ATLETAS</a>
+      <a href="buscar.html">BUSCAR</a>
+      <a href="cadastro.html">CADASTRE</a>
+      <a href="listar.html">LISTA</a>
+      <a href="destaques.html">DESTAQUES</a>
+      <a href="comparar.html">COMPARAR</a>
+    </nav>
+  </header>
 
-    <header>
-        <i class="fa-regular fa-face-smile" style="color: #dedede;"></i>
-        <h1>CADASTRE SEU ATLETA</h1>
-        <nav>
-          <a href="index.html">ATLETAS</a>
-          <a href="buscar.html">BUSCAR</a>
-          <a href="cadastro.html">CADASTRE</a>
-          <a href="listar.html">LISTA</a>
-        </nav>
-      </header>
 <div id="formulario">
     <h2>Formulário de Cadastro</h2>
     <form onsubmit="event.preventDefault();trataForma()">
