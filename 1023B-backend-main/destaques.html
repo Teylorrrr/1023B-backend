@@ -6,13 +6,12 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="style.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" />
-  <title>Comparar Atletas</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&icon_names=sports_basketball" />
+  <title>destaque dos Atletas</title>
 </head>
-
 <body>
-    
   <header>
-    <i class="fa-regular fa-face-smile" style="color: #dedede;"></i>
+    <span class="material-symbols-outlined">sports_basketball</span>
     <h1>CADASTRE SEU ATLETA</h1>
     <nav>
       <a href="index.html">ATLETAS</a>
@@ -23,10 +22,9 @@
     </nav>
   </header>
 
-
 <main>
     <section>
-      <h2>Top 3 Atletas por Quesito</h2>
+      <h2>Top 10 Atletas por Quesito</h2>
       <label for="atributoBusca">Selecione o quesito:</label>
       <select id="atributoBusca">
         <option value="forca">Força</option>
@@ -35,7 +33,7 @@
         <option value="resistencia">Resistência</option>
         <option value="arremesso">Arremesso</option>
       </select>
-      <button onclick="buscarTop3PorAtributo()">Buscar Top 3</button>
+      <button onclick="buscarTop10PorAtributo()">Buscar Top 10</button>
       <ul id="listaStatus"></ul>
     </section>
   </main>
@@ -68,26 +66,26 @@
       }
     }
 
-    async function buscarTop3PorAtributo() {
+    async function buscarTop10PorAtributo() {
   const atributo = document.getElementById("atributoBusca").value;
   const resposta = await fetch("http://localhost:8001/atletas");
   const atletas = await resposta.json();
 
   // Ordenar decrescentemente pelo atributo escolhido
-  const top3 = atletas
+  const top10 = atletas
     .filter(a => typeof a[atributo] === 'number') // garantir que o atributo exista e seja numérico
     .sort((a, b) => b[atributo] - a[atributo])
-    .slice(0, 3);
+    .slice(0, 10);
 
   const lista = document.getElementById("listaStatus");
   lista.innerHTML = "";
 
-  if (top3.length === 0) {
+  if (top10.length === 0) {
     lista.innerHTML = "<li>Nenhum atleta encontrado.</li>";
     return;
   }
 
-  top3.forEach((atleta, index) => {
+  top10.forEach((atleta, index) => {
     const li = document.createElement("li");
     li.textContent = `${index + 1}º - ${atleta.nome} [ ${atleta.id} ] (${atributo}: ${atleta[atributo]})`;
     lista.appendChild(li);
@@ -166,9 +164,9 @@
       </style>
     
   <footer>
-    <div id="footer_copyright">
-      &#169 2023 Desenvolvimento por Teylor 1023B
-    </div>
+    <a href="https://github.com/Teylorrrr" id="footer_copyright" target="_blank" style="text-decoration: none; color: inherit;">
+      &#169; 2023 Desenvolvimento por Teylor 1023B
+    </a>    
   </footer>
 </body>
 </html>
